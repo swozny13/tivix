@@ -1,0 +1,33 @@
+version: "3.7"
+
+x-base: &base
+  image: tivix
+  build:
+    context: .
+    dockerfile: ./docker/Dockerfile
+  volumes:
+    - .:/project/app
+  depends_on:
+    - postgres
+
+services:
+  postgres:
+    image: postgres:13.6-alpine
+    environment:
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/postgresql/data
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  django:
+    <<: *base
+    command: bash -c "python src/manage.py migrate && python src/manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+
+volumes:
+  pg-data:
