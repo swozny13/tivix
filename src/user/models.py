@@ -1,6 +1,6 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractUser
-from django.db.models import CharField, EmailField
+from django.db.models import EmailField
 from django.utils.translation import gettext_lazy as _
 
 from common.models import UuidMixin
@@ -38,8 +38,6 @@ class User(AbstractUser, UuidMixin):
 
     username = None
     email = EmailField(_("Email address"), unique=True)
-    first_name = CharField(_("First name"), max_length=150, blank=True, null=True)
-    last_name = CharField(_("Last name"), max_length=150, blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["password"]
