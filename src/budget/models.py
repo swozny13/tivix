@@ -20,7 +20,7 @@ class Budget(UuidMixin):
     shared_with = ManyToManyField(
         "user.User", blank=True, related_name="shared_budgets"
     )
-    balance = DecimalField(_("Balance"), max_digits=8, decimal_places=2)
+    balance = DecimalField(_("Balance"), max_digits=8, decimal_places=2, default=0.00)
 
     def __str__(self) -> str:
         return f"{self.name}"
