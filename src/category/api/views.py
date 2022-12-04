@@ -5,13 +5,21 @@ from rest_framework.views import APIView
 
 from category.api.serializers import CategorySerializer
 from category.api.validators import CreateCategoryValidator
-from category.domain.commands.create_category import create_category_command
+from category.domain.command.create_category import create_category_command
+from category.domain.query.fetch_categories import fetch_all_categories
 from category.exceptions import CategoryAlreadyExistsException
 from category.mappers import CategoryCreateDTOMapper
 from common.http.response import ErrorResponse
 
 
-class CreateCategoryView(APIView):
+class CategoryView(APIView):
+    def get(self, request: Request) -> Response:
+        # TODO: Implement pagination
+        categories = fetch_all_categories.execute()
+        serializer = CategorySerializer(categories, many=True)
+
+        return Response(data=serializer.data)
+
     def post(self, request: Request) -> Response:
 
         validator = CreateCategoryValidator(data=request.data)
@@ -29,3 +37,12 @@ class CreateCategoryView(APIView):
         serializer = CategorySerializer(category)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class CategoryListView(APIView):
+    def get(self, request: Request) -> Response:
+        # TODO: Implement pagination
+        categories = fetch_all_categories.execute()
+        serializer = CategorySerializer(categories.data, many=True)
+
+        return Response(data=serializer.data)
