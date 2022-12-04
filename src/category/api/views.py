@@ -13,8 +13,6 @@ from common.http.response import ErrorResponse
 
 
 class CreateCategoryView(APIView):
-    permission_classes = [IsAuthenticated]
-
     def post(self, request: Request) -> Response:
 
         validator = CreateCategoryValidator(data=request.data)
