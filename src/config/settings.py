@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     "djoser",
     "config",
     "user",
+    "category",
+    "budget",
 ]
 
 MIDDLEWARE = [
