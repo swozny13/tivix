@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from common.http.response import ErrorResponse
-from user.api.serializers import RegisterSerializer
+from user.api.serializers import RegisterSerializer, UserDetailSerializer
 from user.api.validators import CreateUserValidator
 from user.domain.command.create_user import create_user_command
+from user.domain.query.user_by_id import get_user_by_id
 from user.exceptions import UserAlreadyExistsException
 from user.mappers import UserCreateDTOMapper
 
@@ -31,3 +32,11 @@ class RegisterView(APIView):
         serializer = RegisterSerializer(user)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class UserDetailView(APIView):
+    def get(self, request: Request) -> Response:
+        user = get_user_by_id.execute(user_id=request.user.id)
+        serializer = UserDetailSerializer(user)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
