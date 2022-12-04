@@ -68,12 +68,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
+PAGINATION_DEFAULT_PAGE_SIZE = 10
+PAGINATION_MAX_PAGE_SIZE = 20
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication"
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
+    "PAGE_SIZE": PAGINATION_DEFAULT_PAGE_SIZE,
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
+    "NON_FIELD_ERRORS_KEY": "errors",
 }
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
