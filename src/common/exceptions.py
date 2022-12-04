@@ -4,3 +4,7 @@ class EntityException(Exception):
 
 class EntityAlreadyExistsException(EntityException):
     pass
+
+
+class EntityNotFoundException(EntityException):
+    pass
