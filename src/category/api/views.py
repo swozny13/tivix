@@ -39,10 +39,3 @@ class CategoryView(APIView):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
-class CategoryListView(APIView):
-    def get(self, request: Request) -> Response:
-        # TODO: Implement pagination
-        categories = fetch_all_categories.execute()
-        serializer = CategorySerializer(categories.data, many=True)
-
-        return Response(data=serializer.data)
