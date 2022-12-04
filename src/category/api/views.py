@@ -37,5 +37,3 @@ class CategoryView(APIView):
         serializer = CategorySerializer(category)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-
