@@ -1,4 +1,5 @@
 from rest_framework import status
+from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -12,13 +13,11 @@ from category.mappers import CategoryCreateDTOMapper
 from common.http.response import ErrorResponse
 
 
-class CategoryView(APIView):
-    def get(self, request: Request) -> Response:
-        # TODO: Implement pagination
-        categories = fetch_all_categories.execute()
-        serializer = CategorySerializer(categories, many=True)
+class CategoryView(ListAPIView):
+    serializer_class = CategorySerializer
 
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return fetch_all_categories.execute()
 
     def post(self, request: Request) -> Response:
 

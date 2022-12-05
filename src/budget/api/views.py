@@ -1,6 +1,7 @@
 from uuid import UUID
 
 from rest_framework import status
+from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -33,15 +34,11 @@ class CreateBudgetView(APIView):
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
 
 
-class BudgetListView(APIView):
-    def get(self, request: Request) -> Response:
+class BudgetListView(ListAPIView):
+    serializer_class = BudgetSerializer
 
-        # TODO: Implement pagination
-        # TODO: Change later with shared users
-        budgets = get_budgets_by_user_id.execute(user_id=request.user.id)
-        serializer = BudgetSerializer(budgets, many=True)
-
-        return Response(data=serializer.data, status=status.HTTP_200_OK)
+    def get_queryset(self):
+        return get_budgets_by_user_id.execute(user_id=self.request.user.id)
 
 
 class BudgetDetailView(APIView):
