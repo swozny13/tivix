@@ -75,8 +75,3 @@ class CreateTransactionView(APIView):
         serializer = TransactionSerializer(transaction)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-
-# class ShareBudgetView(APIView):
-#     def post(self, request:Request) -> Response:
-#         validator = ShareBudgetValidator()
