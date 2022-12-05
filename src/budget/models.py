@@ -31,7 +31,7 @@ class Transaction(UuidMixin):
         INCOME = "IN", _("Income")
         EXPENSE = "EX", _("Expense")
 
-    budget = ForeignKey("budget.Budget", on_delete=CASCADE)
+    budget = ForeignKey("budget.Budget", on_delete=CASCADE, related_name="transactions")
     user = ForeignKey("user.User", on_delete=CASCADE)
     name = CharField(_("Name"), max_length=200)
     value = DecimalField(_("Value"), max_digits=8, decimal_places=2)
