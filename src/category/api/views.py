@@ -1,8 +1,8 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
 from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from category.api.serializers import CategorySerializer
 from category.api.validators import CreateCategoryValidator
@@ -15,6 +15,8 @@ from common.http.response import ErrorResponse
 
 class CategoryView(ListAPIView):
     serializer_class = CategorySerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["name"]
 
     def get_queryset(self):
         return fetch_all_categories.execute()

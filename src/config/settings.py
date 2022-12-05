@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     "rest_framework_simplejwt.token_blacklist",
     "djoser",
     "config",
+    "django_filters",
     "user",
     "category",
     "budget",
@@ -80,6 +81,7 @@ REST_FRAMEWORK = {
     "PAGE_SIZE": PAGINATION_DEFAULT_PAGE_SIZE,
     "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "NON_FIELD_ERRORS_KEY": "errors",
+    "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
 }
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]

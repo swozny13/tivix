@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.request import Request
@@ -36,6 +37,8 @@ class CreateBudgetView(APIView):
 
 class BudgetListView(ListAPIView):
     serializer_class = BudgetSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["name"]
 
     def get_queryset(self):
         return get_budgets_by_user_id.execute(user_id=self.request.user.id)
