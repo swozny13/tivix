@@ -18,7 +18,7 @@ class CategoryView(APIView):
         categories = fetch_all_categories.execute()
         serializer = CategorySerializer(categories, many=True)
 
-        return Response(data=serializer.data)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request: Request) -> Response:
 

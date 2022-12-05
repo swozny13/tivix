@@ -10,6 +10,7 @@ from budget.api.validators import CreateBudgetValidator, CreateTransactionValida
 from budget.domain.command.create_budget import create_budget_command
 from budget.domain.command.create_transaction import create_transaction_command
 from budget.domain.query.budget_by_id import get_budget_by_id
+from budget.domain.query.budgets_by_user_id import get_budgets_by_user_id
 from budget.mappers import BudgetCreateDTOMapper, TransactionCreateDTOMapper
 from common.http.response import ErrorResponse
 
@@ -31,6 +32,17 @@ class CreateBudgetView(APIView):
         serializer = BudgetSerializer(budget)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+class BudgetListView(APIView):
+    def get(self, request: Request) -> Response:
+
+        # TODO: Implement pagination
+        # TODO: Change later with shared users
+        budgets = get_budgets_by_user_id.execute(user_id=request.user.id)
+        serializer = BudgetSerializer(budgets, many=True)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 
 class BudgetDetailView(APIView):
@@ -64,6 +76,3 @@ class CreateTransactionView(APIView):
         serializer = TransactionSerializer(transaction)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
-
-
-
