@@ -6,6 +6,7 @@ from user.api.serializers import UserDetailSerializer
 
 class BudgetSerializer(ModelSerializer):
     owner = UserDetailSerializer()
+    shared_with = UserDetailSerializer(many=True)
 
     class Meta:
         model = Budget

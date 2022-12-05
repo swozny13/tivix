@@ -17,7 +17,6 @@ from common.http.response import ErrorResponse
 
 class CreateBudgetView(APIView):
     def post(self, request: Request) -> Response:
-
         validator = CreateBudgetValidator(data=request.data)
 
         if not validator.is_valid():
@@ -76,3 +75,8 @@ class CreateTransactionView(APIView):
         serializer = TransactionSerializer(transaction)
 
         return Response(data=serializer.data, status=status.HTTP_201_CREATED)
+
+
+# class ShareBudgetView(APIView):
+#     def post(self, request:Request) -> Response:
+#         validator = ShareBudgetValidator()
