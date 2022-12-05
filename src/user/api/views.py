@@ -8,6 +8,7 @@ from common.http.response import ErrorResponse
 from user.api.serializers import RegisterSerializer, UserDetailSerializer
 from user.api.validators import CreateUserValidator
 from user.domain.command.create_user import create_user_command
+from user.domain.query.get_users_without_self import get_users_without_self
 from user.domain.query.user_by_id import get_user_by_id
 from user.exceptions import UserAlreadyExistsException
 from user.mappers import UserCreateDTOMapper
@@ -38,5 +39,13 @@ class UserDetailView(APIView):
     def get(self, request: Request) -> Response:
         user = get_user_by_id.execute(user_id=request.user.id)
         serializer = UserDetailSerializer(user)
+
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+class UserListWithoutSelf(APIView):
+    def get(self, request: Request) -> Response:
+        users = get_users_without_self.execute(current_user_id=request.user.id)
+        serializer = UserDetailSerializer(users, many=True)
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
