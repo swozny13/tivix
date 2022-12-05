@@ -13,6 +13,7 @@ from budget.domain.command.create_budget import create_budget_command
 from budget.domain.command.create_transaction import create_transaction_command
 from budget.domain.query.budget_by_id import get_budget_by_id
 from budget.domain.query.budgets_by_user_id import get_budgets_by_user_id
+from budget.exceptions import BudgetNotFoundException
 from budget.mappers import BudgetCreateDTOMapper, TransactionCreateDTOMapper
 from common.http.response import ErrorResponse
 
@@ -46,11 +47,11 @@ class BudgetListView(ListAPIView):
 
 class BudgetDetailView(APIView):
     def get(self, request: Request, budget_id: UUID) -> Response:
-        budget = get_budget_by_id.execute(budget_id)
-        serializer = BudgetSerializer(budget)
-
-        # todo: exception budgetnotfound
-        # todo: permission tylko owner lub shared users
+        try:
+            budget = get_budget_by_id.execute(budget_id)
+            serializer = BudgetSerializer(budget)
+        except BudgetNotFoundException as e:
+            return ErrorResponse(status=status.HTTP_409_CONFLICT, message=str(e))
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
@@ -68,9 +69,8 @@ class CreateTransactionView(APIView):
 
         try:
             transaction = create_transaction_command.execute(transaction_data)
-        except:
-            # todo: execptions
-            return ErrorResponse(message="TODO", status=status.HTTP_409_CONFLICT)
+        except BudgetNotFoundException as e:
+            return ErrorResponse(status=status.HTTP_409_CONFLICT, message=str(e))
 
         serializer = TransactionSerializer(transaction)
 

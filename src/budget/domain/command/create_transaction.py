@@ -35,7 +35,6 @@ class CreateTransactionCommand:
 
             return transaction
         except ObjectDoesNotExist:
-            # TODO: przenies warste wyzej ????
             raise UserNotFoundException(user_id=transaction.user)
 
 

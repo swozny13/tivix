@@ -1,10 +1,7 @@
-from typing import Iterable
-
 from django.core.exceptions import ObjectDoesNotExist
 
 from budget.domain.models import CreateBudgetDTO
 from budget.models import Budget
-from user.domain.models import SharedWithUserDTO
 from user.domain.query.user_by_id import get_user_by_id
 from user.exceptions import UserNotFoundException
 from user.mappers import SharedWithUserMapper
