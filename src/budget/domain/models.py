@@ -11,6 +11,7 @@ class CreateBudgetDTO:
 
 @dataclass(frozen=True)
 class CreateTransactionDTO:
+    budget: UUID
     name: str
     user: UUID
     value: Decimal
