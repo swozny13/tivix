@@ -6,6 +6,4 @@ djangorestframework-simplejwt
 django-filter
 djoser
 pytest
-pytest-cov
 pytest-django
-pytest-freezegun
