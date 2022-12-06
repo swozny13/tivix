@@ -7,3 +7,4 @@ django-filter
 djoser
 pytest
 pytest-django
+pytest-pythonpath
