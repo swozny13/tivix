@@ -1,0 +1,320 @@
+openapi: 3.0.0
+info:
+  title: Tivix Budget
+  description: API Contracts for the Tivix recruitment task.
+  version: "v1.0"
+  contact:
+    name: Tivix Budget
+servers:
+  - url: http://localhost/
+    description: Localhost
+paths:
+  /v1/api/auth/jwt/create/:
+    post:
+      tags:
+        - auth
+      parameters:
+        - name: email
+          required: true
+          schema:
+            type: string
+        - name: password
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Created auth tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  refresh:
+                    type: string
+                    example: refresh_token
+                  access:
+                    type: string
+                    example: access_token
+  /v1/api/auth/register/:
+    post:
+      tags:
+        - auth
+      parameters:
+        - name: email
+          required: true
+          schema:
+            type: string
+        - name: first_name
+          required: true
+          schema:
+            type: string
+        - name: last_name
+          required: true
+          schema:
+            type: string
+        - name: password
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Register user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  email:
+                    type: string
+                    example: foo@bar.com
+                  first_name:
+                    type: string
+                    example: Foo
+                  last_name:
+                    type: string
+                    example: Bar
+  /v1/api/user/:
+    get:
+      tags:
+        - user
+      responses:
+        '200':
+          description: Users list without self
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Users"
+  /v1/api/category/:
+    post:
+      tags:
+        - category
+      parameters:
+        - name: name
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Create category
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: uuid
+                    example: 9f83f98e-c502-4481-9e4f-4f6de53178d4
+                  name:
+                    type: string
+                    example: Music
+    get:
+      tags:
+        - category
+      parameters:
+        - name: name
+          in: query
+          description: Search through category name
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: Categories list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Pagination"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Categories"
+
+  /v1/api/budget/my/:
+    get:
+      tags:
+        - budget
+      parameters:
+        - name: name
+          in: query
+          description: Search through budget name
+          required: false
+          schema:
+            type: string
+
+      responses:
+        '200':
+          description: My budgets list
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/Pagination"
+                  - type: object
+                    properties:
+                      results:
+                        type: array
+                        items:
+                          $ref: "#/components/schemas/Budgets"
+  /v1/api/budget/:
+    post:
+      tags:
+        - budget
+      parameters:
+        - name: name
+          required: true
+          schema:
+            type: string
+        - name: shared_with
+          required: false
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                user:
+                  type: uuid
+      responses:
+        '201':
+          description: Create budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budgets"
+  /v1/api/budget/{uuid}/:
+    get:
+      tags:
+        - budget
+      parameters:
+        - name: uuid
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Retrieve budget
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Budgets"
+
+  /v1/api/budget/{uuid}/transaction/:
+    post:
+      tags:
+        - budget
+      parameters:
+        - name: string
+          required: true
+          schema:
+            type: string
+        - name: value
+          required: true
+          schema:
+            type: decimal
+        - name: category
+          required: true
+          schema:
+            type: uuid
+        - name: type
+          required: true
+          schema:
+            type: string
+            enum: [IN, EX]
+      responses:
+        '201':
+          description: Create transaction
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Transaction"
+
+
+components:
+  schemas:
+    Pagination:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          format: url
+          example: "http://api.example.pl/v1/api/.../?page=3"
+        previous:
+          type: string
+          format: url
+          example: "http://api.example.pl/v1/api/.../?page=4"
+        results:
+          type: array
+          items: { }
+    Users:
+      type: object
+      properties:
+        id:
+          type: uuid
+          example: 9f83f98e-c502-4481-9e4f-4f6de53178d4
+        email:
+          type: string
+          example: foo@bar.com
+        first_name:
+          type: string
+          example: Foo
+        last_name:
+          type: string
+          example: Bar
+    Categories:
+      type: object
+      properties:
+        id:
+          type: uuid
+          example: 9f83f98e-c502-4481-9e4f-4f6de53178d4
+        name:
+          type: string
+          example: Sport
+    Budgets:
+      type: object
+      properties:
+        id:
+          type: uuid
+          example: 9f83f98e-c502-4481-9e4f-4f6de53178d4
+        name:
+          type: string
+          example: Budget name
+        owner:
+          $ref: "#/components/schemas/Users"
+        created_date:
+          type: string
+          format: date
+          example: 2022-12-06T08:11:27.546953Z
+        balance:
+          type: decimal
+          example: 21.37
+        shared_with:
+          type: array
+          items:
+            $ref: "#/components/schemas/Users"
+    Transaction:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Transaction name
+        user:
+          $ref: "#/components/schemas/Users"
+        created_date:
+          type: string
+          format: date
+          example: 2022-12-06T08:11:27.546953Z
+        category:
+          type: uuid
+          example: 9f83f98e-c502-4481-9e4f-4f6de53178d4
+        budget:
+          $ref: "#/components/schemas/Budgets"
+
