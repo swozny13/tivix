@@ -10,13 +10,14 @@ from user.mappers import SharedWithUserMapper
 class CreateBudgetCommand:
     def execute(self, budget: CreateBudgetDTO) -> Budget:
         try:
-            shared_with_users = [
-                SharedWithUserMapper.to_representation(shared_user)
-                for shared_user in budget.shared_with
-            ]
             owner = get_user_by_id.execute(budget.owner)
             created_budget = Budget.objects.create(name=budget.name, owner=owner)
-            created_budget.shared_with.add(*shared_with_users)
+            if budget.shared_with:
+                shared_with_users = [
+                    SharedWithUserMapper.to_representation(shared_user)
+                    for shared_user in budget.shared_with
+                ]
+                created_budget.shared_with.add(*shared_with_users)
 
             return created_budget
         except ObjectDoesNotExist:
