@@ -22,3 +22,7 @@ Application was created for recruitment task.
 
 Go to the: [http://localhost:8001/](http://localhost:8001/)
 
+### Tests:
+
+`docker exec -it tivix_django_1 pytest`
+
